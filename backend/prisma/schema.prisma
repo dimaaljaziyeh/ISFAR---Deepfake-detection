@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum AppRole {
+  ADMIN
+  USER
+}
+
+enum DetectionResult {
+  REAL
+  FAKE
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roles      UserRole[]
+  detections Detection[]
+
+  @@map("users")
+}
+
+model UserRole {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  userId    String   @db.VarChar(36)
+  role      AppRole
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@map("user_roles")
+}
+
+model Detection {
+  id         String          @id @default(uuid()) @db.VarChar(36)
+  userId     String?         @db.VarChar(36)
+  fileName   String          @db.VarChar(255)
+  mediaType  MediaType
+  result     DetectionResult
+  confidence Float
+  createdAt  DateTime        @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("detections")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  name      String   @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
