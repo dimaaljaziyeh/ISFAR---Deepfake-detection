@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/providers/ThemeProvider";
 import { useLang } from "@/providers/LanguageProvider";
 import { useAuth } from "@/providers/AuthProvider";
+import logo from "@/assets/logo.png";
 
 export function Header() {
   const { theme, toggle: toggleTheme } = useTheme();
@@ -25,7 +26,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2 font-display font-bold text-lg">
-          <img src="/src/assets/logo.png" alt="Logo" className="h-9 w-9" />
+          <img src={logo} alt="Logo" className="h-9 w-9" />
           <span>{t.brand}</span>
         </Link>
 
